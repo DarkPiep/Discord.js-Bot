@@ -25,9 +25,18 @@ bot.on("message", async message => {
         return message.channel.send("ok")
     }
     haha
+
+    if (cmd === `${prefix}botinfo`){
+
+        let botembed = new Discord.RichEmbed()
+        .setDescription("Bot Info")
+        .setColor("#10a045")
+        .addField("Bot Name", bot.user.username);
+
+        return message.channel.send(botembed)
+    }
 });
 
-haha
 
 
 
