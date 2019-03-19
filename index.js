@@ -1,43 +1,89 @@
 const botconfig = require("./botconfig.json");
 const Discord = require("discord.js");
+const ytdl = require("ytdl-core");
+
+const prefix = "!";
+
+function play(connection, message) {
+    var server = servers[message.guild.id];
+
+    server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}));
+
+    server.queue.shift();
+
+    server.dispatcher.on("end", function() {
+        if (server.queue[0]) play(connection, message);
+        else connection.disconect;
+    });
+}
 
 const bot = new Discord.Client();
 
+var servers = {};
+
+
+
 bot.on("ready", async () => {
     console.log("bot is online");
-    bot.user.setGame("mitchu is dik");
+    bot.user.setActivity("mitchu is dik");
 });
 
-bot.on("message", async message => {
-    if(message.author.bot) return;
-    if(message.channel.type === "dm") return;
-  
-    let prefix = botconfig.prefix;
-    let messageArray = message.content.split(" ");
-    let cmd = messageArray[0];
-    let args = messageArray.slice(1);
+bot.on("message", function(message) {
+    if (message.author.equals(bot.user)) return;
 
-    if (cmd === `${prefix}hello`){
-        return message.channel.send("Hello!")
-    }
+    if (!message.content.startsWith(prefix)) return;
 
-    if (cmd === `${prefix}mitchu`){
-        return message.channel.send("ok")
-    }
-    haha
+    var args = message.content.substring(prefix.length).split(" ");
 
-    if (cmd === `${prefix}botinfo`){
+    switch (args[0].toLowerCase()) {
+        case "hello":
+            message.channel.sendMessage("Hey");
+        break;
+        case "mitchu":
+            message.channel.sendMessage("is dik!");
+        break;
+        case "play":
+        if (!args[1]) {
+            message.channel.sendMessage("Use a link fag");
+            return;
+        }
 
-        let botembed = new Discord.RichEmbed()
-        .setDescription("Bot Info")
-        .setColor("#10a045")
-        .addField("Bot Name", bot.user.username);
 
-        return message.channel.send(botembed)
+
+        if (!message.member.voiceChannel) {
+            message.channel.sendMessage("Maybe go in a f ing voice channel");
+            return;
+        }
+
+        if(!servers[message.guild.id]) servers[message.guild.id] = {
+            queue: []
+        };
+
+        var server = servers[message.guild.id]; 
+
+        server.queue.push(args[1]);
+
+        if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection) {
+            play(connection, message);
+        });
+        break;
+
+        case "skip":
+            var server = servers[message.guild.id];
+
+            if (server.dispatcher) server.dispatcher.end();
+        break;
+
+        case "stop":
+            var server = servers[message.guild.id];
+
+            if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+        break;
+        default:
+            message.channel.sendMessage("use a good command noob");
+        
     }
 });
-
-
-
+    
 
 bot.login(botconfig.token);
