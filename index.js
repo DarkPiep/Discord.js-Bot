@@ -27,6 +27,8 @@ bot.on("message", async message => {
     haha
 });
 
+haha
+
 
 
 bot.login(botconfig.token);
