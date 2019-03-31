@@ -33,7 +33,7 @@ bot.on("message", function(message) {
 
     if (!message.content.startsWith(prefix)) return;
 
-    var args = message.content.substring(prefix.length).split(" ");
+    let args = message.content.substring(prefix.length).split(" ");
 
     switch (args[0].toLowerCase()) {
         case "hello":
@@ -42,12 +42,18 @@ bot.on("message", function(message) {
         case "mitchu":
             message.channel.sendMessage("is dik!");
         break;
-        case "play":
+        case "jerome":
+            message.channel.sendMessage("Nice headshot jerome. :smile: :gun: ");
+        break;
+            case "play":
         if (!args[1]) {
             message.channel.sendMessage("Use a link fag");
             return;
         }
-
+        case "wtf":
+            message.channel.sendMessage("https://cdn.discordapp.com/attachments/244427626431643659/557656648332738600/SPOILER_c24c7e5ce9204e9449a6f388c08a48c7.png");
+        break;
+        
 
 
         if (!message.member.voiceChannel) {
@@ -79,6 +85,16 @@ bot.on("message", function(message) {
 
             if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
         break;
+        
+        case "8ball":
+            if (!args[2]) message.channel.sendMessage("Ask a question dum dum!");
+
+            var sayings = ["Yes", "No", ]
+            var result = Math.floor((Math.random() * sayings.length) + 0); 
+
+            message.channel.sendMessage(sayings[result]);
+        break;
+
         default:
             message.channel.sendMessage("use a good command noob");
         
