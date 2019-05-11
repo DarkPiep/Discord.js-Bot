@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.4.2",
+    "discord.js-musicbot-addon": "^13.5.2",
     "opusscript": "0.0.6",
+    "simple-youtube-api": "^5.1.1",
     "ytdl-core": "^0.29.1"
   }
 }
